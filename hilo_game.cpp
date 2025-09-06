@@ -24,7 +24,7 @@ bool playHilo(int min, int max, int guess)
 }
 bool playAgain()
 {
-	
+
 	while (true)
 	{
 		std::cout << '\n';
@@ -41,27 +41,32 @@ bool playAgain()
 		//if user input other y and n this loop will be repeated
 	}
 }
+void introduce()
+{
+	std::cout << '\n';
+	std::cout << "Enter minimum value for hilo game : ";
+	int min{};
+	std::cin >> min;
+	std::cout << "Enter maximum value for hilo game : ";
+	int max{};
+	std::cin >> max;
+	int guess{};
+	std::cout << "Enter times guess : ";
+	std::cin >> guess;
+	playHilo(min, max, guess);
+}
 int main()
 {
 	std::cout << "Welcome to NewbieTapDev!\n\n";
 	std::cout << "Introduce to the game Hilo:\n";
 	std::cout << "If right number is 11 and you guess it's 15. You will get a message too high compared right number.\n";
 	std::cout << "Conversely, if you guess it's 5 you will get a message too low compared right number.\n\n";
-		std::cout << "Let's start!\n";
-		do
-		{
-			std::cout << '\n';
-			std::cout << "Enter minimum value for hilo game : ";
-			int min{};
-			std::cin >> min;
-			std::cout << "Enter maximum value for hilo game : ";
-			int max{};
-			std::cin >> max;
-			int guess{};
-			std::cout << "Enter times guess : ";
-			std::cin >> guess;
-			playHilo(min, max, guess);
-		} while (playAgain());
-		std::cout << "Thanks you for playing.\n";
+	std::cout << "Let's start!\n";
+	do
+	{
+		introduce(); //updated for short
+	} while (playAgain());
+	std::cout << "Thanks you for playing.\n";
+
 
 }

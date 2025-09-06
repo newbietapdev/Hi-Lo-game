@@ -1,5 +1,16 @@
 #include <iostream>
 #include "random.h" //for header file
+namespace Intro
+{
+	void hello()
+	{
+		std::cout << "Welcome to NewbieTapDev!\n\n";
+		std::cout << "Introduce to the game Hilo:\n";
+		std::cout << "If right number is 11 and you guess it's 15. You will get a message too high compared right number.\n";
+		std::cout << "Conversely, if you guess it's 5 you will get a message too low compared right number.\n\n";
+		std::cout << "Let's start!\n";
+	}
+}
 bool playHilo(int min, int max, int guess)
 {
 	const int rdNum{ Random::get(min, max) };
@@ -57,11 +68,8 @@ void introduce()
 }
 int main()
 {
-	std::cout << "Welcome to NewbieTapDev!\n\n";
-	std::cout << "Introduce to the game Hilo:\n";
-	std::cout << "If right number is 11 and you guess it's 15. You will get a message too high compared right number.\n";
-	std::cout << "Conversely, if you guess it's 5 you will get a message too low compared right number.\n\n";
-	std::cout << "Let's start!\n";
+	using Intro::hello;
+	hello();
 	do
 	{
 		introduce(); //updated for short
@@ -70,3 +78,4 @@ int main()
 
 
 }
+

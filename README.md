@@ -1,2 +1,1 @@
-Freely redistributable! 
-Now you can download hilo_game.exe file to enjoy the game.
+That has a lot of error input of users, I will update solution fixed it asap.

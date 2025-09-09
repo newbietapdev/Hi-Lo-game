@@ -5,21 +5,21 @@ void ignoreLine()
 {
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
-bool validationNum(int min, int max)
+bool clearFailedExtracted()
 {
-	if (min <= 0 || max <= 0)
-		return false;
-	else
+	if (!std::cin) //std::cin has been moved to failure mode
+	{
+		std::cin.clear(); //put us to normal operation mode
+		ignoreLine();
 		return true;
+	}
+	return false; //otherwise
 }
-bool validationGuess(int guess, int min, int max)
+bool hasUnextractedInput()
 {
-	if (guess < min)
-		return false;
-	if (guess > max)
-		return false;
-	return true;
+	return !std::cin.eof() && std::cin.peek() != '\n';
 }
+
 void hello()
 {
 	std::cout << "Welcome to NewbieTapDev!\n\n";
@@ -29,54 +29,83 @@ void hello()
 	std::cout << "This game will ended when you guess right answer or you lose if expired guess you have just entered.\n";
 	std::cout << "Let's start!\n\n";
 }
-bool playHilo(int min, int max, int guess)
+void playHilo(int min, int max, int guess)
 {
 	const int rdNum{ Random::get(min, max) };
 	std::cout << "Let's play a game. I'm thinking of a number between " << min << " and " << max << ". You have " << guess << " tries to guess what it is.\n";
 	for (int i{ 1 }; i <= guess; ++i)
 	{
-		
+
 		int g{};
 		while (true)
 		{
 			std::cout << "Guess #" << i << ": ";
 			std::cin >> g;
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //delete all characters unextracted until '\n'
-			if (validationGuess(g, min, max))
-				break;
+			if (clearFailedExtracted())
+				continue;
+			if (hasUnextractedInput())
+			{
+				ignoreLine();
+				continue;
+			}
 			else
 			{
-				std::cout << "You have already entered invalid guess, please try again!\n";
-				continue;
+				if (g < min || g > max)
+				{
+					std::cout << "You may input value beyond roughly minimum and maximum value, please try again!\n";
+					ignoreLine();
+					continue;
+				}
+				else
+					break;
 			}
 		}
 		if (g == rdNum)
+		{
 			std::cout << "Correct! You win!\n";
+			return;
+		}
 		else if (g < rdNum)
 			std::cout << "Your guess is too low\n";
 		else if (g > rdNum)
 			std::cout << "Your guess is to high\n";
 	}
 	std::cout << "Sorry, you lose. The correct number was " << rdNum << ".\n";
-	return false;
+	return;
 }
 bool playAgain()
 {
-
+	char c{};
 	while (true)
 	{
 		std::cout << '\n';
 		std::cout << "Would you like to play again (y/n) ? ";
-		char c{};
 		std::cin >> c;
-		switch (c)
+		if (clearFailedExtracted())
+			continue;
+		if (hasUnextractedInput())
 		{
-		case 'y':
-			return true;
-		case 'n':
-			return false;
+			ignoreLine();
+			continue;
 		}
-		//if user input other y and n this loop will be repeated
+		else
+		{
+			if (c != 'y' && c != 'n')
+			{
+				ignoreLine();
+				continue;
+			}
+			else
+			{
+				if (c == 'y')
+					return true;
+				else if (c == 'n')
+				{
+					std::cout << "Thanks you for playing.\n";
+					return false;
+				}
+			}
+		}
 	}
 }
 void introduce()
@@ -88,33 +117,59 @@ void introduce()
 	{
 		std::cout << "Enter minimum value for hilo game : ";
 		std::cin >> min;
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		if (clearFailedExtracted())
+			continue;
+		if (hasUnextractedInput())
+		{
+			ignoreLine();
+			continue;
+		}
+		break;
+	}
+	while (true)
+	{
 		std::cout << "Enter maximum value for hilo game : ";
 		std::cin >> max;
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		if (validationNum(min, max))
+		if (clearFailedExtracted())
+			continue;
+		if (hasUnextractedInput())
 		{
-			if (min < max)
-				break;
-			else
-			{
-				std::cout << "You have already entered invalid inputs, please try again!\n";
-				continue;
-			}
+			ignoreLine();
+			continue;
 		}
 		else
-			std::cout << "You have already entered invalid inputs, please try again!\n";
+		{
+			if (max <= min)
+			{
+				ignoreLine();
+				continue;
+			}
+			else
+				break;
+		}
 	}
 	int guess{};
 	while (true)
 	{
-		std::cout << "Enter times guess : ";
+		std::cout << "Enter times guess: ";
 		std::cin >> guess;
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		if (guess <= 0)
-			std::cout << "You just enter invalid value for guess, please try again!\n";
+		if (clearFailedExtracted())
+			continue;
+		if (hasUnextractedInput())
+		{
+			ignoreLine();
+			continue;
+		}
 		else
-			break;
+		{
+			if (guess <= 0)
+			{
+				ignoreLine();
+				continue;
+			}
+			else
+				break;
+		}
 	}
 	playHilo(min, max, guess);
 }
@@ -126,9 +181,10 @@ int main()
 	{
 		introduce(); //updated for short
 	} while (playAgain());
-	std::cout << "Thanks you for playing.\n";
+	
 
 
 }
+
 
 
